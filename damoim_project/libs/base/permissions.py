@@ -1,9 +1,6 @@
 from rest_framework.permissions import BasePermission
 
 class DamoimUser(BasePermission):
-    def __init__(self):
-        super().__init__(self)
-
     def has_permission(self, request, view):
         """
         Todo 유저인지 아닌지 확인하는 조건문 필요
@@ -17,9 +14,6 @@ class DamoimUser(BasePermission):
         return True
 
 class DamoimGroupManager(BasePermission):
-    def __init__(self):
-        super().__init__(self)
-
     def has_permission(self, request, view):
         """
         Todo 그룹에 가입되어 있는 사람들 중에서 방장인지 아닌지 확인하는 조건문 필요
@@ -33,8 +27,6 @@ class DamoimGroupManager(BasePermission):
         return True
 
 class DamoimBankingPermission(BasePermission):
-    def __init__(self):
-        super().__init__(self)
 
     def has_permission(self, request, view):
         """

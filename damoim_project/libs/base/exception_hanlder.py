@@ -1,8 +1,7 @@
-from django.http import Http404
-from rest_framework.exceptions import PermissionDenied, NotFound, APIException
+from rest_framework.exceptions import PermissionDenied, APIException
 from rest_framework.views import set_rollback
-from damoim.libs import ReturnResponse
-from damoim.libs.DamoimException import HTTP404, PermissionDenied
+from damoim_project.libs.base.response import ReturnResponse
+from damoim_project.libs.base.exceptions import HTTP404, PermissionDenied
 
 def exception_handler(exc, context):
     if isinstance(exc, HTTP404):

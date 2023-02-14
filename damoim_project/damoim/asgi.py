@@ -1,5 +1,5 @@
 """
-ASGI config for damoim project.
+ASGI config for damoim_project project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 

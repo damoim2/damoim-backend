@@ -1,5 +1,5 @@
 """
-WSGI config for damoim project.
+WSGI config for damoim_project project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
