@@ -1,15 +1,14 @@
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from django.contrib.auth import get_user_model
 
-from libs.base.views import BaseModelViewSet, BaseTokenObtainView
-from libs.Logger import Logging
-from user.domain.model.serializer import UserSerializer, CreateUserSerializer
-from libs.base.response import ReturnResponse
-from libs.base.exceptions import NotAuthenticated, ClientValueError, AuthenticationFailed, UnknownError
+from damoim_project.libs.base.views import BaseModelViewSet, BaseTokenObtainView
+from damoim_project.libs.Logger import Logging
+from damoim_project.user.domain.model.serializer import UserSerializer, CreateUserSerializer
+from damoim_project.libs.base.response import ReturnResponse
+from damoim_project.libs.base.exceptions import NotAuthenticated, ClientValueError, AuthenticationFailed, UnknownError
 
 #일단 로그인, 토큰 갱신까지 만들고 Users 데이터 베이스로 사용자 프로필 데이터베이스 작성해야함
 # Todo 유저 관련 데이터 생각하고 다이어그램 그려서 DB 작성하기
@@ -20,7 +19,8 @@ class Login(BaseTokenObtainView):
         AllowAny,
     ]
     user_serializer_class = UserSerializer
-
+    def __init__(self):
+        super().__init__()
     def post(self, request, *args, **kwargs):
         try:
             response = super().post(request, *args, **kwargs)
