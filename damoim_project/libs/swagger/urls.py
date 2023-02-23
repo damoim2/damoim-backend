@@ -7,7 +7,7 @@ from drf_spectacular.views import (
 )
 from damoim_project.user import urls as user_urls
 
-swagger_user_urls = [path("auth/",include(user_urls))]
+swagger_user_urls = [path("auth/", include(user_urls))]
 
 swagger_user_urls = SpectacularJSONAPIView.as_view(patterns=swagger_user_urls)
 
