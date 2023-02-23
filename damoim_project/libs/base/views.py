@@ -1,10 +1,16 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.status import HTTP_403_FORBIDDEN
-from libs.base.exceptions import NotAuthenticated, PermissionDenied, AuthenticationFailed
+from libs.base.exceptions import (
+    NotAuthenticated,
+    PermissionDenied,
+    AuthenticationFailed,
+)
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 from libs.base.response import ReturnResponse
 from rest_framework.status import HTTP_200_OK
+
+
 class BaseModelViewSet(ModelViewSet):
     def handle_exception(self, exc):
         """
@@ -44,8 +50,8 @@ class BaseModelViewSet(ModelViewSet):
             if not permission.has_object_permission(request, self, obj):
                 self.permission_denied(
                     request,
-                    message=getattr(permission, 'message', None),
-                    code=getattr(permission, 'code', None)
+                    message=getattr(permission, "message", None),
+                    code=getattr(permission, "code", None),
                 )
 
     def check_permissions(self, request):
@@ -53,8 +59,8 @@ class BaseModelViewSet(ModelViewSet):
             if not permission.has_permission(request, self):
                 self.permission_denied(
                     request,
-                    message=getattr(permission, 'message', None),
-                    code=getattr(permission, 'code', None)
+                    message=getattr(permission, "message", None),
+                    code=getattr(permission, "code", None),
                 )
 
 
@@ -68,7 +74,6 @@ class BaseTokenObtainView(TokenObtainPairView):
             raise InvalidToken(e.args[0])
 
         return ReturnResponse(serializer.validated_data, status=HTTP_200_OK)
-
 
     def handle_exception(self, exc):
         """
@@ -108,8 +113,8 @@ class BaseTokenObtainView(TokenObtainPairView):
             if not permission.has_object_permission(request, self, obj):
                 self.permission_denied(
                     request,
-                    message=getattr(permission, 'message', None),
-                    code=getattr(permission, 'code', None)
+                    message=getattr(permission, "message", None),
+                    code=getattr(permission, "code", None),
                 )
 
     def check_permissions(self, request):
@@ -117,6 +122,6 @@ class BaseTokenObtainView(TokenObtainPairView):
             if not permission.has_permission(request, self):
                 self.permission_denied(
                     request,
-                    message=getattr(permission, 'message', None),
-                    code=getattr(permission, 'code', None)
+                    message=getattr(permission, "message", None),
+                    code=getattr(permission, "code", None),
                 )

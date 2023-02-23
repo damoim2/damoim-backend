@@ -1,5 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework.serializers import ModelSerializer
+
+
 class CreateUserSerializer(ModelSerializer):
     class Meta:
         model = get_user_model()
@@ -11,4 +13,3 @@ class CreateUserSerializer(ModelSerializer):
             validated_data["username"], None, validated_data["password"]
         )
         return user
-

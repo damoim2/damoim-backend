@@ -1,5 +1,6 @@
 from rest_framework.permissions import BasePermission
 
+
 class DamoimUser(BasePermission):
     def has_permission(self, request, view):
         """
@@ -12,6 +13,7 @@ class DamoimUser(BasePermission):
         Todo 유저인지 아닌지 확인하는 조건문 필요
         """
         return True
+
 
 class DamoimGroupManager(BasePermission):
     def has_permission(self, request, view):
@@ -26,8 +28,8 @@ class DamoimGroupManager(BasePermission):
         """
         return True
 
-class DamoimBankingPermission(BasePermission):
 
+class DamoimBankingPermission(BasePermission):
     def has_permission(self, request, view):
         """
         Todo 로그인한 유저가 접근하는 계좌의 소유주인지 확인하는 로직 필요
@@ -39,4 +41,3 @@ class DamoimBankingPermission(BasePermission):
         Todo 로그인한 유저가 접근하는 계좌의 소유주인지 확인하는 로직 필요
         """
         return True
-

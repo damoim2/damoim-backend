@@ -2,9 +2,7 @@ import logging
 import sys, traceback
 import typing_extensions
 
-LoggingCategoryValue = typing_extensions.Literal[
-    "AUTH"
-]
+LoggingCategoryValue = typing_extensions.Literal["AUTH"]
 
 
 class Logging:
