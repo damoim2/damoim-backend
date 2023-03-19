@@ -14,7 +14,7 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.BasicAuthentication",
     ),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
-    "EXCEPTION_HANDLER": "damoim_project.libs.exception_handler.exception_handler"
+    "EXCEPTION_HANDLER": "damoim_project.libs.exception_handler.exception_handler",
 }
 
 SPECTACULAR_SETTINGS = {

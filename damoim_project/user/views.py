@@ -1,80 +1,54 @@
-from rest_framework import status
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework_simplejwt.tokens import RefreshToken
+from libs.base.views import BaseModelViewSet
+from libs.Logger import Logging
 
-from django.contrib.auth import get_user_model
+from libs.base.response import ReturnResponse
 
-from damoim_project.libs.base.views import BaseModelViewSet, BaseTokenObtainView
-from damoim_project.libs.Logger import Logging
-from damoim_project.user.domain.model.serializer import UserSerializer, CreateUserSerializer
-from damoim_project.libs.base.response import ReturnResponse
-from damoim_project.libs.base.exceptions import NotAuthenticated, ClientValueError, AuthenticationFailed, UnknownError
-
-#일단 로그인, 토큰 갱신까지 만들고 Users 데이터 베이스로 사용자 프로필 데이터베이스 작성해야함
+# 일단 로그인, 토큰 갱신까지 만들고 Users 데이터 베이스로 사용자 프로필 데이터베이스 작성해야함
 # Todo 유저 관련 데이터 생각하고 다이어그램 그려서 DB 작성하기
 logger = Logging("AUTH")
 
-class Login(BaseTokenObtainView):
-    permission_classes = [
-        AllowAny,
-    ]
-    user_serializer_class = UserSerializer
-    def __init__(self):
-        super().__init__()
-    def post(self, request, *args, **kwargs):
-        try:
-            response = super().post(request, *args, **kwargs)
-            if response.status_code == status.HTTP_200_OK:
-                user = get_user_model().objects.get(
-                    username=request.data[get_user_model().USERNAME_FIELD]
-                )
-                serialized_user = self.user_serializer_class(user)
-                response.data.update(serialized_user.data)
-            else:
-                raise AuthenticationFailed
-            return response
-        except Exception as e:
-            raise ClientValueError
-class Register(BaseModelViewSet):
-    permission_classes = [AllowAny]
+
+class Refresh(BaseModelViewSet):
+    """
+    토큰 갱신 부분
+    1. 토큰 기간 검증,
+    2. 토큰 갱신
+        - 토큰 디코드 후 나오는 refresh 테이블에서 검증, uuid 반환
+    3. 토큰 발급
+    """
+
     def post(self, request):
-        try:
-            username = request.data.get("username")
-            password = request.data.get("password")
-        except Exception as e:
-            raise ClientValueError
-        serializer = CreateUserSerializer(
-            data={
-                "username": username,
-                "password": password,
-            }
-        )
-        if serializer.is_valid():
-            serializer.save()
-            return ReturnResponse(code="0000", flag=True, data=serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            raise ClientValueError
+        return ReturnResponse()
 
-
-
-class LogoutView(BaseModelViewSet):
-    permission_classes = [IsAuthenticated]
+class SignIn(BaseModelViewSet):
+    """
+    로그인
+    1. 아이디, 비밀번호 검증
+    2. 토큰 반환
+    """
     def post(self, request):
-        try:
-            refresh_token = request.data["refresh"]
-            token = RefreshToken(refresh_token)
-            token.blacklist()
+        return ReturnResponse()
 
-            return ReturnResponse(code="0000",flag=True,status=status.HTTP_205_RESET_CONTENT)
-        except Exception as e:
-            raise UnknownError
 
-class RefreshAPI(BaseTokenObtainView):
-    permission_classes = [IsAuthenticated, ]
-    def post(self, request, *args, **kwargs):
-        try:
-            response = super().post(request, *args, **kwargs)
-            return response
-        except Exception as e:
-            return NotAuthenticated
+class SignUp(BaseModelViewSet):
+    """
+    회원가입 부분
+    1. 소셜 uuid 발급,
+    2. 받은 uuid와 User 매칭
+    3. 정보 저장
+    4. 토큰 발급
+    """
+    def post(self, request):
+        return ReturnResponse()
 
+
+class SignOut(BaseModelViewSet):
+    """
+    로그아웃 부분
+    1. 토큰 검증
+    2. 받은 uuid의 refresh토큰 검증
+    3. refresh 테이블 블랙리스트 등록
+    4. 205 반환
+    """
+    def post(self, request):
+        return ReturnResponse()
