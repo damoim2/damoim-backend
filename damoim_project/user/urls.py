@@ -1,9 +1,9 @@
 from django.urls import include, path
-from .views import LogoutView, Login, Register, RefreshAPI
+from user.views import SignIn, SignUp, SignOut, Refresh
 
 urlpatterns = [
-    path("login", Login.as_view()),
-    path("logout", LogoutView.as_view({"post": "post"})),
-    path("registration", Register.as_view({"post": "post"})),
-    path("refresh", RefreshAPI.as_view()),
+    path("login", SignIn.as_view({"post": "post"})),
+    path("logout", SignOut.as_view({"post": "post"})),
+    path("registration", SignUp.as_view({"post": "post"})),
+    path("refresh", Refresh.as_view({"post": "post"})),
 ]
