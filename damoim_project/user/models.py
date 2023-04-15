@@ -5,6 +5,16 @@ from libs.base.models import SoftDeleteModel
 
 
 # Create your models here
+class TokenRepository(SoftDeleteModel):
+    index = models.BigAutoField(primary_key=True)
+    user_id = models.IntegerField(null=False)
+    token = models.TextField(null=False)
+    created_at = models.DateTimeField(auto_now=True)
+    expired_at = models.DateTimeField(null=True)
+
+    class Meta:
+        db_table = "token_repository"
+
 
 class KakaoAuth(SoftDeleteModel):
     kakao_id = models.CharField(max_length=100, null=False)
@@ -15,20 +25,28 @@ class KakaoAuth(SoftDeleteModel):
     class Meta:
         db_table = "kakao_auth"
 
+
 class User(SoftDeleteModel):
-    user_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, auto_created=True)
+    user_id = models.UUIDField(
+        default=uuid.uuid4, editable=False, unique=True, auto_created=True
+    )
     gender = models.BooleanField(default=False)
     is_allow_data_share = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
+    user_thumbnail = models.TextField(null=True)
 
     class Meta:
         db_table = "user"
+
+
 class SocialToUser(models.Model):
     social_id = models.CharField(primary_key=True)
-    user_id = models.ForeignKey(User, models.CASCADE, db_column='user_id')
+    user_id = models.ForeignKey(User, models.CASCADE, db_column="user_id")
+
     class Meta:
         db_table = "social_to_user"
+
 
 class Group(models.Model):
     group_id = models.BigAutoField(primary_key=True)
@@ -36,12 +54,15 @@ class Group(models.Model):
     group_thumbnail = models.TextField(null=True)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
+
     class Meta:
         db_table = "group"
 
+
 class GroupToUser(models.Model):
     index = models.BigAutoField(primary_key=True)
-    user_id = models.ForeignKey(User, models.DO_NOTHING, db_column='user_id')
-    group_id = models.ForeignKey(Group, models.DO_NOTHING, db_column='group_id')
+    user_id = models.ForeignKey(User, models.DO_NOTHING, db_column="user_id")
+    group_id = models.ForeignKey(Group, models.DO_NOTHING, db_column="group_id")
+
     class Meta:
         db_table = "group_to_user"

@@ -1,4 +1,70 @@
-from rest_framework import viewsets
+import permission as permission
+from rest_framework import viewsets, status
+from rest_framework import permissions
+
+from group_service.models import Post
+from libs.base.response import ReturnResponse as Response
+from group_service.serializers.Post.PostDeSerializer import PostFormDeSerialier
+from group_service.serializers.Post.PostSerializer import (
+    PostCREATESerializer,
+    PostGETSerializer,
+)
+from libs.exception.exceptions import PostCreateError, PostGetError
+from user.models import Group
+
+
+class PostViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def create(self, request):
+        user_id = request.user.user_id
+        group_id = Group.objects.get(grouptouser__user_id_id=user_id)
+        image_list = request.FILES["Photos"]
+        # upload to s3
+        # Todo make "upload S3 Function"
+        requested_data = request.data
+        requested_data = requested_data.update({"group_id": group_id})
+        deserializer_object = PostFormDeSerialier(requested_data)
+        valid_form = deserializer_object.create(user_id=user_id, group_id=group_id)
+        create_serializer = PostCREATESerializer(data=valid_form)
+        if create_serializer.is_valid():
+            create_serializer.create()
+            return Response(
+                flag=True,
+                code="SERV0000",
+                data=create_serializer.data,
+                status=status.HTTP_201_CREATED,
+            )
+        else:
+            raise PostCreateError()
+
+    def get(self, request):
+        post_id = request.parser_context.get("pid")
+        query = Post.objects.get(post_id=post_id)
+        serializer = PostGETSerializer(query)
+        if serializer.is_valid():
+            return Response(
+                flag=True,
+                code="SERV0000",
+                data=serializer.data,
+                status=status.HTTP_200_OK,
+            )
+        else:
+            raise PostGetError()
+
+    def list(self, request):
+        user_id = request.user.user_id_id
+
+    def delete(self, request):
+        post_id = request.parser_context.get("pid")
+        query = Post.objects.get(post_id=post_id)
+        query.delete()
+        return
+
+    def update(self, request):
+        # update 나중에 정해지고 나서 진행
+        # Todo partial_update dev
+        return
 
 
 """

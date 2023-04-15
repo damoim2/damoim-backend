@@ -6,10 +6,14 @@ import hashlib
 import hmac
 import json
 import time
+from django.utils import timezone
+from user.models import TokenRepository
+
+
 class Token:
     # define secret keys to sign the tokens
-    ACCESS_TOKEN_SECRET_KEY = os.environ.get('SECRET_KEY')
-    REFRESH_TOKEN_SECRET_KEY = os.environ.get('SECRET_KEY')
+    ACCESS_TOKEN_SECRET_KEY = os.environ.get("SECRET_KEY")
+    REFRESH_TOKEN_SECRET_KEY = os.environ.get("SECRET_KEY")
 
     # define token expiry times in seconds
     ACCESS_TOKEN_EXPIRY_TIME = 3600  # 1 hour
@@ -19,6 +23,12 @@ class Token:
     def create_token_pair(self, user_id):
         access_token = self.create_access_token(user_id)
         refresh_token = self.create_refresh_token(user_id)
+        TokenRepository.objects.create(
+            token=refresh_token,
+            user_id=user_id,
+            created_at=timezone.now()
+            expired_at=
+        )
         return access_token, refresh_token
 
     # create a new access token with expiry time of 1 hour from now
@@ -26,11 +36,19 @@ class Token:
         header = {"alg": "HS256", "typ": "JWT"}
         payload = {
             "user_id": user_id,
-            "exp": int(time.time()) + self.ACCESS_TOKEN_EXPIRY_TIME
+            "exp": int(time.time()) + self.ACCESS_TOKEN_EXPIRY_TIME,
         }
-        header_b64 = base64.urlsafe_b64encode(json.dumps(header).encode()).decode().rstrip("=")
-        payload_b64 = base64.urlsafe_b64encode(json.dumps(payload).encode()).decode().rstrip("=")
-        signature = hmac.new(self.ACCESS_TOKEN_SECRET_KEY.encode(), f"{header_b64}.{payload_b64}".encode(), hashlib.sha256).digest()
+        header_b64 = (
+            base64.urlsafe_b64encode(json.dumps(header).encode()).decode().rstrip("=")
+        )
+        payload_b64 = (
+            base64.urlsafe_b64encode(json.dumps(payload).encode()).decode().rstrip("=")
+        )
+        signature = hmac.new(
+            self.ACCESS_TOKEN_SECRET_KEY.encode(),
+            f"{header_b64}.{payload_b64}".encode(),
+            hashlib.sha256,
+        ).digest()
         signature_b64 = base64.urlsafe_b64encode(signature).decode().rstrip("=")
         token = f"{header_b64}.{payload_b64}.{signature_b64}"
         return token
@@ -40,11 +58,19 @@ class Token:
         header = {"alg": "HS256", "typ": "JWT"}
         payload = {
             "user_id": user_id,
-            "exp": int(time.time()) + self.REFRESH_TOKEN_EXPIRY_TIME
+            "exp": int(time.time()) + self.REFRESH_TOKEN_EXPIRY_TIME,
         }
-        header_b64 = base64.urlsafe_b64encode(json.dumps(header).encode()).decode().rstrip("=")
-        payload_b64 = base64.urlsafe_b64encode(json.dumps(payload).encode()).decode().rstrip("=")
-        signature = hmac.new(self.REFRESH_TOKEN_SECRET_KEY.encode(), f"{header_b64}.{payload_b64}".encode(), hashlib.sha256).digest()
+        header_b64 = (
+            base64.urlsafe_b64encode(json.dumps(header).encode()).decode().rstrip("=")
+        )
+        payload_b64 = (
+            base64.urlsafe_b64encode(json.dumps(payload).encode()).decode().rstrip("=")
+        )
+        signature = hmac.new(
+            self.REFRESH_TOKEN_SECRET_KEY.encode(),
+            f"{header_b64}.{payload_b64}".encode(),
+            hashlib.sha256,
+        ).digest()
         signature_b64 = base64.urlsafe_b64encode(signature).decode().rstrip("=")
         token = f"{header_b64}.{payload_b64}.{signature_b64}"
         return token
@@ -62,7 +88,11 @@ class Token:
             if int(time.time()) > payload["exp"]:
                 # expired token
                 return None
-            expected_signature = hmac.new(self.ACCESS_TOKEN_SECRET_KEY.encode(), f"{header_b64}.{payload_b64}".encode(), hashlib.sha256).digest()
+            expected_signature = hmac.new(
+                self.ACCESS_TOKEN_SECRET_KEY.encode(),
+                f"{header_b64}.{payload_b64}".encode(),
+                hashlib.sha256,
+            ).digest()
             if not hmac.compare_digest(expected_signature, signature):
                 # invalid signature
                 return None
@@ -84,7 +114,11 @@ class Token:
             if int(time.time()) > payload["exp"]:
                 # expired token
                 return None
-            expected_signature = hmac.new(self.REFRESH_TOKEN_SECRET_KEY.encode(), f"{header_b64}.{payload_b64}".encode(), hashlib.sha256).digest()
+            expected_signature = hmac.new(
+                self.REFRESH_TOKEN_SECRET_KEY.encode(),
+                f"{header_b64}.{payload_b64}".encode(),
+                hashlib.sha256,
+            ).digest()
             if not hmac.compare_digest(expected_signature, signature):
                 # invalid signature
                 return None
@@ -98,6 +132,7 @@ class Token:
         refresh_payload = self.decode_and_verify_refresh_token(refresh_token)
         if not refresh_payload:
             # invalid or expired refresh token
+            # raise UnAuthroization
             return None
         user_id = refresh_payload["user_id"]
         access_token = self.create_access_token(user_id)

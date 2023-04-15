@@ -14,6 +14,22 @@ class DamoimException(APIException):
     flag: bool
     pass
 
+class ClientError(DamoimException):
+    code = "1"
+    flag = False
+    status_code = HTTP_400_BAD_REQUEST
+    pass
+class ServerError(DamoimException):
+    code = "0"
+    flag = False
+    status_code = HTTP_500_INTERNAL_SERVER_ERROR
+    pass
+
+class ThridPartyError(DamoimException):
+    code = "2"
+    flag = False
+    status_code = HTTP_500_INTERNAL_SERVER_ERROR
+    pass
 
 class NotAuthenticated(DamoimException):
     status_code = HTTP_401_UNAUTHORIZED
