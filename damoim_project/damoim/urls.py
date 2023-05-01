@@ -15,9 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+import mockAPI.urls as mock_url
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("auth/", include("user.urls")),
-    path("swagger/", include("libs.swagger.urls")),
+    path("mock/", include(mock_url))
+    # path("auth/", include("user.urls")),
+    # path("swagger/", include("libs.swagger.urls")),
 ]

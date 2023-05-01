@@ -33,7 +33,7 @@ ALLOWED_HOSTS = [
 
 # "ebhealthcheck.apps.EBHealthCheckConfig",
 INSTALLED_APPS = [
-    "user",
+    "mockAPI",
     "banking",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
     "drf_spectacular",
+    "damoim_service",
 ]
 
 MIDDLEWARE = [
@@ -54,7 +55,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "libs.base.middleware.ReponseMiddleware",
 ]
 ROOT_URLCONF = "damoim.urls"
 
@@ -108,7 +108,7 @@ JWT_AUTH = {
 }
 """
 
-AUTH_USER_MODEL = "user.User"
+AUTH_USER_MODEL = "damoim_service.User"
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -145,7 +145,7 @@ USE_TZ = False
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 # 로그 형식 추가
 LOGGING = {
