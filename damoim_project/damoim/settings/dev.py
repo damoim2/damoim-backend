@@ -44,14 +44,18 @@ SPECTACULAR_SETTINGS = {
     # https://www.npmjs.com/package/swagger-ui-dist 해당 링크에서 최신버전을 확인후 취향에 따라 version을 수정해서 사용하세요.
     "SWAGGER_UI_DIST": "//unpkg.com/swagger-ui-dist@3.38.0",  # Swagger UI 버전을 조절할수 있습니다.
 }
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.mysql",
-#         "NAME": os.environ.get("DAMOIM_DB_NAME"),
-#         "USER": os.environ.get("DAMOIM_DB_USERNAME"),
-#         "PASSWORD": os.environ.get("DAMOIM_DB_PASSWORD"),
-#         "HOST": os.environ.get("DAMOIM_DB"),
-#         "PORT": os.environ.get("DAMOIM_DB_PORT"),
-#         "OPTIONS": {"init_command": "SET sql_mode='STRICT_TRANS_TABLES'"},
-#     },
-# }
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": os.environ.get("DAMOIM_DB_NAME"),
+        "USER": os.environ.get("DAMOIM_DB_USERNAME"),
+        "PASSWORD": os.environ.get("DAMOIM_DB_PASSWORD"),
+        "HOST": os.environ.get("DAMOIM_DB"),
+        "PORT": os.environ.get("DAMOIM_DB_PORT"),
+        "OPTIONS": {"init_command": "SET sql_mode='STRICT_TRANS_TABLES'"},
+    },
+}
+S3_REGION = os.environ.get("S3_REGION_DEV")
+S3_ACCESSKEY_ID = os.environ.get("S3_ACCESSKEY_ID_DEV")
+S3_SECRET_ACCESSKEY = os.environ.get("S3_SECRET_ACCESSKEY_DEV")
+S3_BUCKET_NAME = os.environ.get("S3_BUCKET_NAME")

@@ -1,5 +1,6 @@
 from rest_framework.serializers import ModelSerializer
-from Repository import Comment
+
+from damoim_service.models import Comment
 
 
 class CreateCommentSerializer(ModelSerializer):

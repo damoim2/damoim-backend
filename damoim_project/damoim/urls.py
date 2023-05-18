@@ -16,10 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 import mockAPI.urls as mock_url
+from damoim_service.urls import urlpatterns
+from auth.urls import urlpatterns as auth_urls
+from libs.swagger.urls import urlpatterns as swagger_urls
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("mock/", include(mock_url))
-    # path("auth/", include("user.urls")),
+    path("mock/", include(mock_url)),
+    path("api/", include(urlpatterns)),
+    path("auth/", include(auth_urls)),
+    path("swagger/", include(swagger_urls))
     # path("swagger/", include("libs.swagger.urls")),
 ]

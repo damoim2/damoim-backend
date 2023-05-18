@@ -26,3 +26,7 @@ DATABASES = {
         "OPTIONS": {"init_command": "SET sql_mode='STRICT_TRANS_TABLES'"},
     },
 }
+S3_REGION = os.environ.get("S3_REGION_DEV")
+S3_ACCESSKEY_ID = os.environ.get("S3_ACCESSKEY_ID_DEV")
+S3_SECRET_ACCESSKEY = os.environ.get("S3_SECRET_ACCESSKEY_DEV")
+S3_BUCKET_NAME = os.environ.get("S3_BUCKET_NAME")
