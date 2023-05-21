@@ -11,8 +11,8 @@ class CommentAPI(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def create_comment(self, request, post_id):
-        deserializer = CreateCommentDeserializer(request.data)
+        deserializer = CreateCommentDeserializer(data=request.data)
         post_comment_to_post(
-            command=deserializer.create(), post_id=post_id, user_id=request.user.uuids
+            command=deserializer.create(user_id=request.user.uuids), post_id=post_id
         )
         return Response(status=status.HTTP_201_CREATED, flag=True)

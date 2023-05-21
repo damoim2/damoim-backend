@@ -17,32 +17,30 @@ class AWSS3:
         region_name=settings.S3_REGION,
     )
 
-    def upload_file_s3(self, image, filename: str, path: str, bucket_type: int):
+    def upload_file_s3(self, image, filename: str, bucket_type: int):
         try:
-            domain = settings.S3_DOMAIN
-            bucket = settings.S3_BUCKET_NAME
-            url_generator = os.path.join(path, filename)
-            if bucket_type == USER_TYPE:
-                bucket = bucket + "/user"
-            elif bucket_type == POST_TYPE:
-                bucket = bucket + "/post"
-            elif bucket_type == GROUP_TYPE:
-                bucket = bucket + "/group"
+            domain = "https://soldoc-server-dev.s3.ap-northeast-2.amazonaws.com/damoim/"
+            bucket = "damoim-s3"
+            if bucket_type == 1:
+                path = "damoim/user/"
+            elif bucket_type == 2:
+                path = "damoim/post/"
+            elif bucket_type == 3:
+                path = "damoim/group"
             content_type = "image/jpeg"
             if isinstance(image, File):
                 content_type = image.content_type
+            url_generator = os.path.join(path, filename)
             ret = self.s3_client.upload_fileobj(
-                file,
+                image,
                 bucket,  # "bucket_name",
                 url_generator,
-                # [7]
                 ExtraArgs={
                     "ACL": "public-read",
                     "ContentType": content_type,
                     "ContentDisposition": "attachment; filename*=UTF-8''" + filename,
                 },
             )
-
             return os.path.join(domain, url_generator)
         except Exception as e:
             return e

@@ -5,11 +5,12 @@ from libs.Exception import ClientRequestValidationError
 
 
 class CreateCommentDeserializer(serializers.Serializer):
-    user_id = serializers.IntegerField()
     comment = serializers.CharField()
 
-    def create(self):
+    def create(self, user_id):
         if self.is_valid():
-            return CreateCommentCommand(**self.validated_data)
+            return CreateCommentCommand(
+                comment=self.validated_data["comment"], user_id=user_id
+            )
         else:
             raise ClientRequestValidationError()
