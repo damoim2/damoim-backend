@@ -9,3 +9,4 @@ class CreatePostCommand:
     group_id_id: int
     title: str
     contents: str
+    image_contents: list or None

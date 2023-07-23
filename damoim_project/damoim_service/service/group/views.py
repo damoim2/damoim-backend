@@ -26,12 +26,13 @@ class GroupAPI(viewsets.ModelViewSet):
 
     @extend_schema(**get_group_list_swagger)
     def get_group_list(self, request):
-        user_id = request.user.uuids
+        user_id = request.user.id
         serializer = GetGroupListSerializer(get_group_list(user_id=user_id), many=True)
         return Response(data=serializer.data, flag=True, status=status.HTTP_200_OK)
 
     @extend_schema(**get_group_memeber_list_swagger)
     def get_group_member_list(self, request, group_id):
+        # Todo username이  안나옴 체크 필요함
         serializer = GetGroupMemberListSerializer(
             get_group_member_list(group_id=group_id), many=True
         )
@@ -41,7 +42,7 @@ class GroupAPI(viewsets.ModelViewSet):
     def create(self, request):
         deserializer = CreateDeserializer(data=request.data)
         command = deserializer.create(
-            user_id=request.user.uuids,
+            user_id=request.user.id,
             thumbnail=request.FILES["thumbnail"]
             if "thumbnail" in request.FILES
             else None,
@@ -52,6 +53,6 @@ class GroupAPI(viewsets.ModelViewSet):
     @extend_schema(**map_user_group_swagger)
     def map_user_group(self, request):
         deserializer = MapUserGroupDeserializer(data=request.data)
-        command = deserializer.create(user_id=request.user.uuids)
+        command = deserializer.create(user_id=request.user.id)
         map_user_to_group(command)
         return Response(data={}, flag=True, status=status.HTTP_200_OK)

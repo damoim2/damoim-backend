@@ -41,6 +41,7 @@ class LoginView(jwt_views.TokenObtainPairView):
 
     @extend_schema(**sign_in_swagger)
     def post(self, request, *args, **kwargs):
+        # Todo Token으로 로그인 할 수 잇도록 진행
         try:
             response = super().post(request, *args, **kwargs)
 
@@ -79,10 +80,12 @@ class RegistrationView(ModelViewSet):
     serializer_class = CreateUserSerializer
 
     @extend_schema(**sign_up_swagger)
+    # Todo name이 안들어감
+    # UUID 넣어서
     def create(self, request, *args, **kwargs):
         deserializer = CreateUserDeserializer(data=request.data)
         command = deserializer.create()
-        serializer = CreateUserSerializer(asdict(command))
+        serializer = CreateUserSerializer(data=asdict(command))
         if serializer.is_valid():
             serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)

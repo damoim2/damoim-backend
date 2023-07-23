@@ -131,3 +131,47 @@ class PostToImage(SoftDeleteModel):
     image_url = models.CharField(max_length=255, null=False)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
+
+
+class Icon(SoftDeleteModel):
+    index = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=30, null=False)
+    image = models.TextField()
+
+
+class GroupCalendar(SoftDeleteModel):
+    index = models.AutoField(primary_key=True)
+    # 그룹의 id
+    group_id = models.ForeignKey(
+        Group, db_column="fk_group_id", on_delete=models.CASCADE
+    )
+    from_date = models.DateTimeField(null=False)
+    to_date = models.DateTimeField(null=False)
+    time = models.TimeField(null=True)
+    title = models.CharField(null=True, max_length=255)
+    address = models.CharField(null=True, max_length=255)
+    memo = models.TextField(null=True)
+    icon_id = models.ForeignKey(
+        Icon, db_column="fk_icon_id", on_delete=models.DO_NOTHING, null=True
+    )
+    color = models.CharField(null=False, max_length=30, default="#1E1E1E")
+    is_day_on = models.BooleanField(null=False, default=False)
+
+
+class UserCalendar(SoftDeleteModel):
+    index = models.AutoField(primary_key=True)
+    # 개인의 uuid
+    user_id = models.ForeignKey(
+        User, db_column="fk_user_id", on_delete=models.DO_NOTHING
+    )
+    from_date = models.DateTimeField(null=False)
+    to_date = models.DateTimeField(null=False)
+    time = models.TimeField(null=True)
+    title = models.CharField(null=True, max_length=255)
+    address = models.CharField(null=True, max_length=255)
+    memo = models.TextField(null=True)
+    icon_id = models.ForeignKey(
+        Icon, db_column="fk_icon_id", on_delete=models.DO_NOTHING, null=True
+    )
+    color = models.CharField(null=False, max_length=30, default="#1E1E1E")
+    is_day_on = models.BooleanField(null=False, default=False)
